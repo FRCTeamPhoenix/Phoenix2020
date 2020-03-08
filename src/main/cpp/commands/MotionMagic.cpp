@@ -43,6 +43,6 @@ bool MotionMagic::IsFinished(){
     double errHeading = m_heading - m_frontRight->GetSelectedSensorPosition(1);
 
     bool isFinished = abs(err) < m_maxErr && abs(errHeading) < m_maxErrHeading;
-    std::cout<<err<<" "<<errHeading<<" "<<isFinished<<std::endl;
+    std::cout<<err<<" "<< m_frontRight->GetSelectedSensorPosition(0)<<" "<<errHeading<<" "<<isFinished<<std::endl;
     return isFinished;
 }

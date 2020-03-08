@@ -21,11 +21,22 @@ void DefaultDrive::Execute() {
         TankSubsystem::getInstance()->setLowGear();
     }
 
-    if (m_inverted) {
-        //swap sides and direction
-        TankSubsystem::getInstance()->setSpeed(rightStick, leftStick);
-    } else {
-        TankSubsystem::getInstance()->setSpeed(-leftStick, -rightStick);
+    if(std::abs(leftStick) > DEADZONE || std::abs(rightStick) > DEADZONE){
+        TankSubsystem::getInstance()->setCoastMode();
+        if (m_inverted) {
+            //swap sides and direction
+            TankSubsystem::getInstance()->setSpeed(rightStick, leftStick);
+        } else {
+            TankSubsystem::getInstance()->setSpeed(-leftStick, -rightStick);
+        }
+    }else {
+        TankSubsystem::getInstance()->setSpeed(0.0, 0.0);
+    }
+    
+    //enable brake mode when 'X' is pressed
+    if(ControlBinding::getInstance()->getControlStatus("eBrake") > 0.1){
+        TankSubsystem::getInstance()->setBrakeMode();
+        TankSubsystem::getInstance()->setSpeed(0.001, 0.001);
     }
     
     //toggle direction using the 'B' button

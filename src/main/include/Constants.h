@@ -32,15 +32,15 @@ const int OPERATOR_JOYSTICK = 1;
 const int IMU_ID = 0;
 const int TALON_FRONT_LEFT = 1;
 const int TALON_FRONT_RIGHT = 2;
-const int TALON_BACK_LEFT = 3;
-const int TALON_BACK_RIGHT = 4;
+const int VICTOR_BACK_LEFT = 3;
+const int VICTOR_BACK_RIGHT = 4;
 const int TALON_FLYWHEEL_LEFT = 5;
 const int TALON_FLYWHEEL_RIGHT = 6;
 const int TALON_SHOOTER_TOP = 7;
-const int TALON_SHOOTER_BOTTOM = 8;
 const int TALON_LOADER_LEFT = 9;
 const int TALON_LOADER_RIGHT = 10;
-const int TALON_INTAKE = 11;
+const int VICTOR_INTAKE = 11;
+const int TALON_INTAKE_TILT = 12;
 
 // Solenoid IDs
 const int PCM_CAN_ID = 11;
@@ -61,12 +61,14 @@ const frc::Color YELLOW_TARGET = frc::Color(0.361, 0.524, 0.113);
 const int PID_VELOCITY_SLOT = 0;
 const int PID_HEADING_SLOT = 1;
 
+//distance to move in auto
+const int AUTO_DISTANCE = 4096 * 2;
+
 //used for the aim adjust
-const double AIM_P = 0.05;
-const double AIM_DIST_P = 0.03;
-const double AIM_FF = 0.01;
-const double AIM_THRESH = 0.5;
-const double DIST_TRESH = 5.0;
+const double AIM_P = 0.2;
+const double AIM_DIST_P = 0.15;
+const double AIM_THRESH = 0.4;
+const double DIST_THRESH = 0.3;
 
 //used for the turning maneuver
 const double TURN_P = 0.02;
@@ -78,7 +80,16 @@ const double TURN_END_TRESH = 5;
 const double TARGET_HEIGHT_IN = 48.0;
 const double CAMERA_HEIGHT_IN = 7.5;
 const double CAMERA_ANGLE = 0.0;
-const double TARGET_DIST_IN = 240.0;
+
+//speeds for the shooter mechanism
+const double FLYWHEEL_SPEED = 0.5;
+const double LOADER_SPEED = 0.2;
+const double SHOOTER_SPEED = 0.35;
+const double INTAKE_SPEED = 0.8;
+
+// Intake tilt upper and lower limits
+const int INTAKE_TILT_UPPER_LIMIT = -350;
+const int INTAKE_TILT_LOWER_LIMIT = -17500;
 
 //conversion values
 const double TICKS_PER_REV = 4096.0;

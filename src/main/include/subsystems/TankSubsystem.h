@@ -22,6 +22,8 @@ class TankSubsystem : public frc2::SubsystemBase {
         void setSpeed(const double& left, const double& right);
         void setHighGear();
         void setLowGear();
+        void setBrakeMode();
+        void setCoastMode();
 
         //zero encoders
         void zeroEncoders();
@@ -38,12 +40,12 @@ class TankSubsystem : public frc2::SubsystemBase {
     private:
         TankSubsystem();
 
-        //PigeonIMU m_imu = {IMU_ID};
+        PigeonIMU m_imu = {IMU_ID};
 
         const int TIMEOUT = 10;
 
         TalonSRX m_frontLeft = {TALON_FRONT_LEFT};
         TalonSRX m_frontRight = {TALON_FRONT_RIGHT};
-        TalonSRX m_backLeft = {TALON_BACK_LEFT};
-        TalonSRX m_backRight = {TALON_BACK_RIGHT};
+        VictorSPX m_backLeft = {VICTOR_BACK_LEFT};
+        VictorSPX m_backRight = {VICTOR_BACK_RIGHT};
 };

@@ -19,7 +19,7 @@ void TankSubsystem::init(){
     //remote sensor 0 should be the other device's quad encoder
     m_frontRight.ConfigRemoteFeedbackFilter(m_frontLeft.GetDeviceID(), RemoteSensorSource::RemoteSensorSource_TalonSRX_SelectedSensor, 0); 
     //remote sensor 1 should be the imu
-    //m_frontRight.ConfigRemoteFeedbackFilter(m_imu.GetDeviceNumber(), RemoteSensorSource::RemoteSensorSource_Pigeon_Yaw, 1);
+    m_frontRight.ConfigRemoteFeedbackFilter(m_imu.GetDeviceNumber(), RemoteSensorSource::RemoteSensorSource_Pigeon_Yaw, 1);
 
     //use the sum of the two sensors to determine distance
     m_frontRight.ConfigSensorTerm(SensorTerm::SensorTerm_Sum0, FeedbackDevice::QuadEncoder); //this side
@@ -40,6 +40,7 @@ void TankSubsystem::init(){
 
     //change output to match +
     m_frontRight.SetSensorPhase(false);
+    m_frontLeft.SetSensorPhase(false);
 
     //invert the right side motion
     m_frontRight.SetInverted(false);
@@ -84,6 +85,9 @@ void TankSubsystem::init(){
     m_frontRight.Config_kF(PID_HEADING_SLOT, 0.0);
     m_frontRight.Config_IntegralZone(PID_HEADING_SLOT, 400); //allowable error
     m_frontRight.ConfigClosedLoopPeakOutput(PID_HEADING_SLOT, 0.5); //max percent output
+
+    //set both wheels to coast
+    setCoastMode();
 }
 
 void TankSubsystem::setSpeed(const double& left, const double& right){
@@ -98,6 +102,16 @@ void TankSubsystem::setLowGear(){
     PCMHandler::getInstance()->setLowGear();
 }
 
+void TankSubsystem::setBrakeMode(){
+    m_frontLeft.SetNeutralMode(Brake);
+    m_frontRight.SetNeutralMode(Brake);
+}
+
+void TankSubsystem::setCoastMode(){
+    m_frontLeft.SetNeutralMode(Coast);
+    m_frontRight.SetNeutralMode(Coast);
+}
+
 void TankSubsystem::zeroEncoders(){
     m_frontLeft.GetSensorCollection().SetQuadraturePosition(0);
     m_frontRight.GetSensorCollection().SetQuadraturePosition(0);
@@ -105,14 +119,14 @@ void TankSubsystem::zeroEncoders(){
 }
 
 void TankSubsystem::zeroGyro(){
-    //m_imu.SetYaw(0.0);
+    m_imu.SetYaw(0.0);
 }
 
 void TankSubsystem::updateGyro(){
     
     //update the values
     double ypr[3];
-    //m_imu.GetYawPitchRoll(ypr);
+    m_imu.GetYawPitchRoll(ypr);
     ypr[0] = 0.0;
     ypr[1] = 0.0;
     ypr[2] = 0.0;

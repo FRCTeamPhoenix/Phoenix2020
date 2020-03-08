@@ -37,10 +37,10 @@ void Robot::RobotInit() {
  */
 void Robot::RobotPeriodic() { 
     frc2::CommandScheduler::GetInstance().Run();
-    TankSubsystem::getInstance()->updateGyro();
+    // TankSubsystem::getInstance()->updateGyro();
 
     //update color sensor values
-    frc::Color detectedColor = m_colorSensor.getDetectedColor();
+    /* frc::Color detectedColor = m_colorSensor.getDetectedColor();
     std::string approxColor = m_colorSensor.getApproximateColor();
 
     frc::SmartDashboard::PutNumber("R", detectedColor.red);
@@ -50,8 +50,7 @@ void Robot::RobotPeriodic() {
 
     if(!frc::SmartDashboard::GetBoolean("Should Auto", false)){
         frc::SmartDashboard::PutBoolean("Should Auto", false);
-    }
-    
+    } */
 }
 
 /**
@@ -80,11 +79,11 @@ void Robot::AutonomousInit() {
 
 void Robot::AutonomousPeriodic() {
     //teleop logic
-    if(m_counter < 120){
-        TankSubsystem::getInstance()->setSpeed(0.5, 0.5);
-        //frc2::CommandScheduler::GetInstance().Schedule(true, &m_autoCommand);
-    }else{
+    if(m_counter > 1){
         TankSubsystem::getInstance()->setSpeed(0.0, 0.0);
+        TankSubsystem::getInstance()->zeroEncoders();
+        TankSubsystem::getInstance()->zeroGyro();
+        frc2::CommandScheduler::GetInstance().Schedule(true, &m_autoCommand);
     }
 
     m_counter++;

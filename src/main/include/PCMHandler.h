@@ -26,6 +26,4 @@ class PCMHandler {
         void turnOff();
         void setLowGear();
         void setHighGear();
-        void tiltIntakeUp(bool active);
-        void tiltIntakeDown(bool active);
 };

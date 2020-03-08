@@ -11,6 +11,9 @@
 #include <frc2/command/Command.h>
 #include <frc/Joystick.h>
 #include <frc2/command/SequentialCommandGroup.h>
+#include <frc/Timer.h>
+#include <frc2/command/InstantCommand.h>
+#include <frc2/command/FunctionalCommand.h>
 
 #include "commands/MotionMagic.h"
 #include "commands/Turn.h"
@@ -38,11 +41,49 @@ private:
   DefaultOperate m_defaultOperate;
   frc::Joystick m_driverJoystick{DRIVER_JOYSTICK};
   AimAdjust m_nonAutoAim{false};
-  frc2::SequentialCommandGroup m_autoCommand{MotionMagic( TICKS_PER_REV * 5.0, 0.0, 400.0, 400.0)};
-  //frc2::SequentialCommandGroup m_autoCommand{MotionMagic( TICKS_PER_REV * 5.0, 0.0, 400.0, 400.0), Turn(180.0), AimAdjust(true)};
+  
+  frc2::FunctionalCommand m_moveForward{
+    [this]{TankSubsystem::getInstance()->setSpeed(0.0, 0.0);
+    TankSubsystem::getInstance()->zeroEncoders();},
+    [this]{TankSubsystem::getInstance()->setSpeed(0.5, 0.5); Shooter::getInstance()->setFlywheelSpeed(FLYWHEEL_SPEED); Shooter::getInstance()->setShooterSpeed(0.0); 
+  Shooter::getInstance()->setLoaderSpeed(0.0);},
+    [this](bool interrupted){TankSubsystem::getInstance()->setSpeed(0.0, 0.0);},
+    [this]{return TankSubsystem::getInstance()->getFrontRight()->GetSelectedSensorPosition(0) > AUTO_DISTANCE;},
+    {TankSubsystem::getInstance()},
+  };
 
+  frc2::FunctionalCommand m_moveBackward{
+    [this]{TankSubsystem::getInstance()->setSpeed(0.0, 0.0);
+    TankSubsystem::getInstance()->zeroEncoders();},
+    [this]{TankSubsystem::getInstance()->setSpeed(-0.5, -0.5);},
+    [this](bool interrupted){TankSubsystem::getInstance()->setSpeed(0.0, 0.0);},
+    [this]{return TankSubsystem::getInstance()->getFrontRight()->GetSelectedSensorPosition(0) < -AUTO_DISTANCE;},
+    {TankSubsystem::getInstance()},
+  };
+
+  /*frc2::FunctionalCommand m_fireBalls{
+    [this]{m_timer.Start();},
+    [this]{Shooter::getInstance()->setFlywheelSpeed(FLYWHEEL_SPEED); 
+  Shooter::getInstance()->setShooterSpeed(SHOOTER_SPEED); 
+  Shooter::getInstance()->setLoaderSpeed(LOADER_SPEED);},
+    [this](bool interrupted){Shooter::getInstance()->setFlywheelSpeed(0.0); 
+  Shooter::getInstance()->setShooterSpeed(0.0); 
+  Shooter::getInstance()->setLoaderSpeed(0.0);},
+    [this]{return m_timer.HasPeriodPassed(5.0);},
+    {Shooter::getInstance()}
+  };*/
+
+  frc2::InstantCommand m_fireBalls{[this] {Shooter::getInstance()->setFlywheelSpeed(FLYWHEEL_SPEED); 
+  Shooter::getInstance()->setShooterSpeed(SHOOTER_SPEED); 
+  Shooter::getInstance()->setLoaderSpeed(LOADER_SPEED);},
+  {Shooter::getInstance()}};
+  //use this version if vision target bad
+  //frc2::SequentialCommandGroup m_autoCommand{m_moveForward};
+  frc2::SequentialCommandGroup m_autoCommand{m_moveForward, m_moveBackward, m_fireBalls};
+  
   bool m_buttonPressed = false;
   int m_counter = 0;
 
   ColorSensor m_colorSensor;
+  frc::Timer m_timer;
 };

@@ -82,6 +82,18 @@
     "stdexcept": "cpp",
     "streambuf": "cpp",
     "cinttypes": "cpp",
+<<<<<<< HEAD
+    "typeinfo": "cpp",
+    "hash_map": "cpp",
+    "hash_set": "cpp",
+    "bitset": "cpp",
+    "list": "cpp",
+    "unordered_set": "cpp",
+    "numeric": "cpp",
+    "random": "cpp",
+    "future": "cpp",
+    "iomanip": "cpp"
+=======
     "typeinfo": "cpp"
 =======
     "exception": "cpp",
@@ -150,5 +162,6 @@
 >>>>>>> develop
     "*.inc": "cpp"
 >>>>>>> shooter
+>>>>>>> develop
   }
 }

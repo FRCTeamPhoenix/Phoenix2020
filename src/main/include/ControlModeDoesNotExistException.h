@@ -3,7 +3,7 @@
 
 class ControlModeDoesNotExistException : public std::exception {
     public:
-        virtual const char* printException() const throw() {
-            return "Control mode does not exist";
+        virtual const char* what() const throw() override {
+            return "ControlModeDoesNotExistException: Control mode does not exist";
         }
 };

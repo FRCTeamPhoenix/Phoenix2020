@@ -18,13 +18,12 @@ void AimAdjust::Execute() {
     
     if(Limelight::seesTarget()){
         float err = Limelight::getTx();
-        float targetCurrentDist = (TARGET_HEIGHT_IN - CAMERA_HEIGHT_IN) / tan((Limelight::getTy() + CAMERA_ANGLE) * PI / 180.0f);
-        float distErr = targetCurrentDist - TARGET_DIST_IN;
+        float distErr = Limelight::getTy();
 
-        float speed = AIM_P * err + (err > AIM_THRESH ? AIM_FF : 0.0) + (err < -AIM_THRESH ? -AIM_FF : 0.0);
+        float speed = AIM_P * err;
         float distSpeed = 0.0f;
 
-        if(abs(distErr) >= DIST_TRESH)
+        if(abs(distErr) >= DIST_THRESH)
             distSpeed = AIM_DIST_P * distErr;
         TankSubsystem::getInstance()->setSpeed(distSpeed + speed, distSpeed - speed);
     }
@@ -42,9 +41,8 @@ void AimAdjust::End(bool interrupted) {
 bool AimAdjust::IsFinished() {
     if(m_autoVersion){
         float err = Limelight::getTx();
-        float targetCurrentDist = (TARGET_HEIGHT_IN - CAMERA_HEIGHT_IN) / tan((Limelight::getTy() + CAMERA_ANGLE) * PI / 180.0f);
-        float distErr = targetCurrentDist - TARGET_DIST_IN;
-        return (abs(err) < AIM_THRESH && abs(distErr) < DIST_TRESH);
+        float distErr = Limelight::getTy();
+        return (std::abs(err) < AIM_THRESH && std::abs(distErr) < DIST_THRESH);
     }else{
         return !m_driverJoystick.GetRawButton(1);
     }
